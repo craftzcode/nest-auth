@@ -1,6 +1,7 @@
+import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 
-import cookieParser from 'cookie-parser'
+import * as cookieParser from 'cookie-parser'
 
 import { AppModule } from './app.module'
 
@@ -11,6 +12,8 @@ async function bootstrap() {
   app.enableCors()
   //! Parses cookies included in the request headers and converts them into a JavaScript object, making it easier for your application to access and manipulate cookie data
   app.use(cookieParser())
+  //! The (ValidationPipe) provides a convenient approach to enforce validation rules for all incoming client payloads
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
 
   await app.listen(3000)
 }
