@@ -9,7 +9,6 @@ import * as bcrypt from 'bcrypt'
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { UserEntity } from './entities/user.entity'
 import { PrismaService } from 'src/prisma/prisma.service'
 
 @Injectable()
@@ -43,23 +42,38 @@ export class UsersService {
     return { message: 'Sign-up successful.' }
   }
 
+  async getUserByUsernameOrEmail(usernameOrEmail: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        OR: [
+          {
+            username: usernameOrEmail
+          },
+          {
+            email: usernameOrEmail
+          }
+        ]
+      }
+    })
+
+    return user
+  }
+
   //! Get All Users
-  async getAllUsers(): Promise<UserEntity[]> {
+  async getAllUsers() {
     const users = await this.prismaService.user.findMany()
-    return users.map(user => new UserEntity(user))
+    return users
   }
 
   //! Get User By Id
-  async getUserById(id: string): Promise<UserEntity> {
+  async getUserById(id: string) {
     const user = await this.prismaService.user.findUnique({
       where: {
         id
       }
     })
 
-    if (!user) throw new NotFoundException('User not found.')
-
-    return new UserEntity(user)
+    return user
   }
 
   //! Update User
@@ -148,11 +162,7 @@ export class UsersService {
   }
 
   async deleteUser(id: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        id
-      }
-    })
+    const user = await this.getUserById(id)
 
     if (!user) throw new NotFoundException('User not found.')
 
@@ -160,18 +170,22 @@ export class UsersService {
   }
 
   async getUserByUsername(username: string) {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         username
       }
     })
+
+    return user
   }
 
   async getUserByEmail(email: string) {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         email
       }
     })
+
+    return user
   }
 }
