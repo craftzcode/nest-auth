@@ -30,6 +30,6 @@ model Session {
   sessionToken String   @unique
   expires      DateTime
 
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
