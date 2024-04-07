@@ -1,0 +1,22 @@
+{
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "semi": false,
+  "arrowParens": "avoid",
+  "trailingComma": "none",
+
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "",
+    "^express",
+    "",
+    "^@nestjs",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "<TYPES>",
+    "",
+    "[.]"
+  ],
+  "importOrderParserPlugins": ["typescript", "decorators-legacy"]
+}
