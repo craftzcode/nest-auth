@@ -164,7 +164,7 @@ export class AuthService {
     return { ...tokens }
   }
 
-  storeRefreshTokenToCookie(response: Response, refreshToken: string) {
+  storeRefreshTokenInCookie(response: Response, refreshToken: string) {
     response.cookie('jwtRefreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
