@@ -36,7 +36,7 @@ export class AuthController {
   ) {
     const { accessToken, refreshToken } = await this.authService.login(loginDto)
 
-    this.authService.storeRefreshTokenToCookie(response, refreshToken)
+    this.authService.storeRefreshTokenInCookie(response, refreshToken)
 
     return { accessToken }
   }
@@ -63,7 +63,7 @@ export class AuthController {
     const { accessToken, refreshToken: newJwtRefreshToken } =
       await this.authService.refreshAccessToken(oldJwtRefreshToken)
 
-    this.authService.storeRefreshTokenToCookie(response, newJwtRefreshToken)
+    this.authService.storeRefreshTokenInCookie(response, newJwtRefreshToken)
 
     return { accessToken }
   }
