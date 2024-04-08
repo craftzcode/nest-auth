@@ -1,4 +1,4 @@
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 import {
   Injectable,
@@ -41,9 +41,17 @@ export class AuthService {
     if (!passwordMatch)
       throw new NotFoundException('Incorrect username or password.')
 
-    const tokens = await this.createOrUpdateUserSession(user.id)
+    const tokens = await this.createOrUpdateUserSession({ userId: user.id })
 
     return { ...tokens }
+  }
+
+  async logout(refreshToken: string) {
+    const userSession = await this.getSessionBySessionToken(refreshToken)
+
+    if (!userSession) throw new UnauthorizedException()
+
+    await this.deleteSession(userSession.id)
   }
 
   async createSession(userId: string, sessionToken: string) {
@@ -83,6 +91,10 @@ export class AuthService {
     })
   }
 
+  async deleteSession(id: string) {
+    await this.prismaService.session.delete({ where: { id } })
+  }
+
   async generateTokens(userId: string): Promise<AuthEntity> {
     const user = await this.usersService.getUserById(userId)
 
@@ -102,7 +114,7 @@ export class AuthService {
         { id: user.id },
         {
           secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-          expiresIn: '1m' // Change this to 7d
+          expiresIn: '7d' // Change this to 7d
         }
       )
     ])
@@ -110,10 +122,13 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 
-  async createOrUpdateUserSession(
-    userId?: string,
+  async createOrUpdateUserSession({
+    userId,
+    refreshToken
+  }: {
+    userId?: string
     refreshToken?: string
-  ): Promise<AuthEntity> {
+  }) {
     if (refreshToken) {
       const userSession = await this.getSessionBySessionToken(refreshToken)
 
@@ -143,12 +158,26 @@ export class AuthService {
     }
   }
 
-  async storeRefreshTokenToCookie(res: Response, refreshToken: string) {
-    res.cookie('jwt-refresh-token', refreshToken, {
+  async refreshAccessToken(refreshToken: string): Promise<AuthEntity> {
+    const tokens = await this.createOrUpdateUserSession({ refreshToken })
+
+    return { ...tokens }
+  }
+
+  storeRefreshTokenToCookie(response: Response, refreshToken: string) {
+    response.cookie('jwtRefreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+  }
+
+  async deleteRefreshTokenFromCookie(response: Response) {
+    response.clearCookie('jwtRefreshToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
     })
   }
 }

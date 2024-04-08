@@ -19,6 +19,7 @@ export class JwtAccessTokenStrategy extends PassportStrategy(
       //! The (jwtFromRequest) option expects a method that can be used to extract the JWT from the request
       //! In this case, you will use the standard approach of supplying a bearer token in the Authorization header of our API requests
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      //! The (secretOrKey) option tells the strategy what secret to use to verify the JWT
       ignoreExpiration: false,
       //! The (secretOrKey) option tells the strategy what secret to use to verify the JWT
       secretOrKey: configService.get<string>('ACCESS_TOKEN_SECRET')
