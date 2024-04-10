@@ -6,7 +6,7 @@ import { PassportStrategy } from '@nestjs/passport'
 
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
-import { AuthService } from '../auth.service'
+import { UsersService } from 'src/users/users.service'
 
 @Injectable()
 export class JwtRefreshTokenStrategy extends PassportStrategy(
@@ -15,7 +15,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
 ) {
   constructor(
     configService: ConfigService,
-    private authService: AuthService
+    private usersService: UsersService
   ) {
     super({
       //! The (jwtFromRequest) option expects a method that can be used to extract the JWT from the request
@@ -25,22 +25,26 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
       ]),
       ignoreExpiration: false,
       //! The (secretOrKey) option tells the strategy what secret to use to verify the JWT
-      secretOrKey: configService.get<string>('REFRESH_TOKEN_SECRET'),
+      secretOrKey: configService.get<string>('REFRESH_TOKEN_SECRET')
       //! If true the request will be passed to the verify callback. (i.e. verify(request, jwt_payload, done_callback))
       //! In short we can use (Request) in (validate)
-      passReqToCallback: true
+      // passReqToCallback: true
     })
   }
 
-  async validate(request: Request, payload: { id: string }) {
-    const jwtRefreshToken = JwtRefreshTokenStrategy.fromCookie(request)
+  async validate(payload: { id: string }) {
+    const user = await this.usersService.getUserById(payload.id)
 
-    const userSession =
-      await this.authService.getSessionBySessionToken(jwtRefreshToken)
+    if (!user) throw new UnauthorizedException()
 
-    if (!userSession) throw new UnauthorizedException()
-
-    return
+    return {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      image: user.image,
+      role: user.role
+    }
   }
 
   private static fromCookie(request: Request): string | undefined {

@@ -8,7 +8,7 @@ import {
   UseGuards
 } from '@nestjs/common'
 
-import { UpdateUserDto } from './dto/update-user.dto'
+import { UpdateUserDto } from '../auth/dto/update-user.dto'
 import { UserEntity } from './entities/user.entity'
 import { UsersService } from './users.service'
 import { JwtAccessTokenGuard } from 'src/auth/guards/jwt-access-token.guard'

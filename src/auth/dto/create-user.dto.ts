@@ -4,7 +4,7 @@ import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator'
 
 //! (implements) to take all types
 export class CreateUserDto
-  implements Omit<User, 'id' | 'emailVerified' | 'image'>
+  implements Omit<User, 'id' | 'emailVerified' | 'image' | 'role'>
 {
   @IsNotEmpty()
   @IsString()

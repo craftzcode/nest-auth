@@ -36,7 +36,8 @@ export class JwtAccessTokenStrategy extends PassportStrategy(
       name: user.name,
       username: user.username,
       email: user.email,
-      image: user.image
+      image: user.image,
+      role: user.role
     }
   }
 }

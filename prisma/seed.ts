@@ -17,7 +17,8 @@ async function main() {
       name: 'Ivan Gregor Tabalno',
       username: 'igmtdev',
       email: 'igmtdevofficial@gmail.com',
-      password: passwordIvan
+      password: passwordIvan,
+      role: 'ADMIN'
     }
   })
 
@@ -28,7 +29,8 @@ async function main() {
       name: 'Aiori Lovemir Iveen Tabalno',
       username: 'aliofficial',
       email: 'alitabalnoofficial@gmail.com',
-      password: passwordAli
+      password: passwordAli,
+      role: 'USER'
     }
   })
 
@@ -39,7 +41,8 @@ async function main() {
       name: 'Christine Joyce Amper',
       username: 'cjamper12',
       email: 'cjamper12@gmail.com',
-      password: passwordChristine
+      password: passwordChristine,
+      role: 'USER'
     }
   })
 

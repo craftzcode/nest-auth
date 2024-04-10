@@ -11,7 +11,7 @@ import { UsersModule } from 'src/users/users.module'
 
 @Module({
   imports: [PrismaModule, UsersModule, PassportModule, JwtModule.register({})],
-  providers: [AuthService, JwtAccessTokenStrategy],
+  providers: [AuthService, JwtAccessTokenStrategy, JwtRefreshTokenStrategy],
   controllers: [AuthController]
 })
 export class AuthModule {}

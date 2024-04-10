@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { Role, User } from '@prisma/client'
 
 export class UserEntity implements User {
   //! No we can pass the data to (new UserEntity(data)) to transform the (response) using (toJSON)
@@ -13,6 +13,7 @@ export class UserEntity implements User {
   emailVerified: Date
   image: string
   password: string
+  role: Role
 
   //! We add a toJSON method to the class, which returns an object containing all properties of the UserEntity instance except for the password property
   toJSON(): Partial<UserEntity> {
