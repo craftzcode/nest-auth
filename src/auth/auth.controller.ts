@@ -64,11 +64,11 @@ export class AuthController {
     return { accessToken }
   }
 
-  // @Get('get-current-user')
-  // @UseGuards(JwtRefreshTokenGuard)
-  // getCurrentUser(@GetRequestUser() reqUser: UserEntity) {
-  //   return { user: reqUser }
-  // }
+  @Get('get-current-user')
+  @UseGuards(JwtRefreshTokenGuard)
+  getCurrentUser(@GetRequestUser() reqUser: UserEntity) {
+    return { user: reqUser }
+  }
 
   // @Post('login')
   // @HttpCode(HttpStatus.OK)
