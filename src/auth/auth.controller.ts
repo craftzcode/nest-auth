@@ -37,11 +37,17 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Body() loginDto: LoginDto
   ) {
-    const { accessToken, refreshToken } = await this.authService.login(loginDto)
+    const {
+      accessToken,
+      refreshToken,
+      user: userData
+    } = await this.authService.login(loginDto)
 
     this.authService.storeRefreshTokenInCookie(res, refreshToken)
 
-    return { accessToken }
+    const user = new UserEntity(userData)
+
+    return { accessToken, user }
   }
 
   @Post('logout')
@@ -58,11 +64,11 @@ export class AuthController {
     return { accessToken }
   }
 
-  @Get('get-current-user')
-  @UseGuards(JwtAccessTokenGuard)
-  getCurrentUser(@GetRequestUser() reqUser: UserEntity) {
-    return { user: reqUser }
-  }
+  // @Get('get-current-user')
+  // @UseGuards(JwtRefreshTokenGuard)
+  // getCurrentUser(@GetRequestUser() reqUser: UserEntity) {
+  //   return { user: reqUser }
+  // }
 
   // @Post('login')
   // @HttpCode(HttpStatus.OK)

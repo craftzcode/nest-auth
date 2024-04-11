@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   //! LOGIN
-  async login(loginDto: LoginDto): Promise<AuthEntity> {
+  async login(loginDto: LoginDto) {
     const user = await this.usersService.getUserByUsernameOrEmail(
       loginDto.usernameOrEmail
     )
@@ -45,7 +45,7 @@ export class AuthService {
     const accessToken = await this.generateAccessToken(user.id)
     const refreshToken = await this.generateRefreshToken(user.id)
 
-    return { accessToken, refreshToken }
+    return { accessToken, refreshToken, user }
   }
 
   //! GENERATE ACCESS TOKEN
@@ -54,7 +54,7 @@ export class AuthService {
       { id: userId },
       {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-        expiresIn: '10s' // 15m
+        expiresIn: '5s' // 15m
       }
     )
 
@@ -67,7 +67,7 @@ export class AuthService {
       { id: userId },
       {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-        expiresIn: '1m' // 7d
+        expiresIn: '30s' // 7d
       }
     )
 
