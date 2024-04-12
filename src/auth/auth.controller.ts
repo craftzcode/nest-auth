@@ -61,7 +61,7 @@ export class AuthController {
   async refreshAccssToken(@GetRequestUser() reqUser: UserEntity) {
     const accessToken = await this.authService.generateAccessToken(reqUser.id)
 
-    return { accessToken }
+    return { user: reqUser, accessToken }
   }
 
   @Get('get-current-user')
